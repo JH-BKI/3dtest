@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>A-Frame VR Experience</title>
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+  <script src="components/popup.js"></script>
+  <script src="components/hotspot.js"></script>
+  <script src="components/scene-manager.js"></script>
+  <script src="components/follow-camera.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a-scene id="tour" scene-manager="data: data/data.json" cursor="rayOrigin: mouse"
+    raycaster="objects: .hotspot, .clickable">
+    <a-assets>
+      <img id="hotspot-image" src="core/hotspot.png">
+    </a-assets>
+
+    <!-- Environment -->
+    <a-sky id="sky"></a-sky>
+
+    <!-- Camera -->
+    <a-entity id="camera-container" camera="zoom: 1" position="0 1.6 0">
+      <a-camera id="camera"  look-controls></a-camera>
+    </a-entity>
+  </a-scene>
+    <div id="popup-container"></div>
+
+  <!-- <dialog id="popup-hotspot-${popup-id}" class="popup">
+    <article>
+      <header>
+        <button class="popup-btn-close" aria-label="Close" rel="prev"></button>
+        <h4>
+          ${popup-label}
+        </h4>
+      </header>
+      <figure class="image">
+        <img src="${popup-targetSrc}" alt="">
+      </figure>
+      <figure class="video">
+        <iframe src="${popup-targetSrc}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen=""></iframe>
+      </figure>
+      <p>
+        ${popup-targetDesc}
+      </p>
+      <footer>
+        <button class="popup-btn-close secondary">Close</button>
+      </footer>
+    </article>
+  </dialog>
+
+
+  <dialog id="splash" class="splash">
+    <article>
+      <div class="grid-container">
+        <div class="header"></div>
+        <div class="content"> 
+          <h3>${splash-name}</h3>
+          ${splash-description}
+        </div>
+        <div class="footer">
+          ${splash-footer}
+          <button class="popup-btn-close secondary">Begin</button>
+        </div>
+      </div>
+    </article>
+  </dialog> -->
+
+
+  <!-- <dialog class="zoom">
+    <article>
+      <div class="grid-container">
+        <div class="header">Wheelchair Features</div>
+        <div class="content"><img src="./assets/background.png" class="full-screen-width"></div>
+        <div class="footer">
+          <button class="secondary">Close</button>
+        </div>
+      </div>
+    </article>
+  </dialog> -->
+
+
+  
+
+  
+
+</body>
+
+</html>
