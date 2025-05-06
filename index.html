@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Frame Dynamic Scene Loader</title>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.7.1/dist/aframe-master.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <style>
+      /* Style for the popup */
+      #popup {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        display: none;
+        z-index: 9999;
+        border-radius: 8px;
+      }
+
+      #popup img, #popup video {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+      }
+
+      #popup .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <a-scene>
+      <!-- Background image -->
+      <a-sky id="sky" src=""></a-sky>
+
+      <!-- Text description -->
+      <a-entity 
+        id="description" 
+        text="value: Loading...; align: center; width: 4; wrapCount: 40" 
+        position="0 -1.6 -2">
+      </a-entity>
+
+      <a-entity 
+        id="debug" 
+        text="value: DEBUG...; align: center; width: 4; wrapCount: 40" 
+        position="0 2.6 -2">
+      </a-entity>
+
+      <!-- Hotspot container -->
+      <a-entity id="hotspot-container"></a-entity>
+
+      <!-- Camera with visible cursor for desktop -->
+      <a-entity camera look-controls position="0 1.6 0">
+        <a-entity cursor="fuse: false; rayOrigin: mouse"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
+                  material="color: black; shader: flat">
+        </a-entity>
+      </a-entity>
+    </a-scene>
+
+    <!-- Popup Modal -->
+    <div id="popup">
+      <button class="close-btn" onclick="closePopup()">Close</button>
+      <div id="popup-content"></div>
+    </div>
+
+    <script>
+	
+
+  /* ---------- Device‑type detection ---------- */
+  function detectDevice() {
+    const ua = navigator.userAgent.toLowerCase();
+  	console.log('userAgent:', ua);
+    const touch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const w = window.innerWidth;
+
+    const mobileUA  = /iphone|ipod|android.*mobile|windows phone|blackberry/.test(ua);
+    const tabletUA  = /ipad|android(?!.*mobile)|tablet/.test(ua);
+    const desktopUA = /(windows|macintosh|linux)/.test(ua);
+
+    function baseCategory() {
+      if (mobileUA || (touch && w < 768))              return 'Mobile';
+      if (tabletUA || (touch && w >= 768 && w < 1024)) return 'Tablet';
+      if (desktopUA && !touch)                         return 'Desktop';
+      if (desktopUA && touch) return 'desktop-touch';
+      return 'Unknown';
+    }
+
+    if (navigator.xr?.isSessionSupported) {
+      return navigator.xr.isSessionSupported('immersive-vr')
+        .then(supported => supported ? 'webxr' : baseCategory());
+    }
+    return Promise.resolve(baseCategory());
+  }
+
+  /* ---------- Orientation & Aspect ---------- */
+  function getOrientation() {
+    if (screen.orientation?.type)
+      return screen.orientation.type.startsWith('portrait') ? 'Portrait' : 'Landscape';
+
+    const o = window.orientation;
+    return (o === 0 || o === 180) ? 'Portrait' :
+           (o === 90 || o === -90) ? 'Landscape' : 'Unknown';
+  }
+
+  function getAspectRatio() {
+    return (window.innerWidth / window.innerHeight).toFixed(2);   // e.g. 1.78 ≈ 16:9
+  }
+
+  /* ---------- Render status text ---------- */
+  function renderStatus(device, orientation) {
+    const ratio = getAspectRatio();
+
+    console.log('Detected:', `Device: ${device} | Orientation: ${orientation} | Aspect: ${ratio}`);        
+        
+    const textEl = document.getElementById('debug');
+    if (textEl) {
+      textEl.setAttribute(
+        'text',
+        `value: Device: ${device} | Orientation: ${orientation} | Aspect: ${ratio}; align: center; width: 4; wrapCount: 40`
+      );
+    }
+  }
+
+  /* ---------- Initialise ---------- */
+  function updateStatus() {
+    Promise.all([detectDevice(), Promise.resolve(getOrientation())])
+      .then(([device, orientation]) => renderStatus(device, orientation));
+  }
+  updateStatus();
+
+  /* ---------- Responsive listeners ---------- */
+  screen.orientation?.addEventListener('change', updateStatus);
+  window.addEventListener('orientationchange', updateStatus);
+  window.addEventListener('resize', updateStatus);
+
+
+
+
+
+
+
+
+	
+	
+      let scenes = [
+  {
+    "name": "Clinic Entrance",
+    "image": "/assets/scenes/scene1.jpg",
+    "description": "This is the entrance of the dental clinic, where patients check in.",
+    "hotspots": [
+      {
+        "type": "navigation",
+        "label": "Go to Application Room",
+        "position": {
+          "x": -2.834,
+          "y": 0.175,
+          "z": 1
+        },
+        "targetScene": 1,
+        "useRotation": true,
+        "rotation": "-84.133 57.942 -62.654"
+      },
+      {
+        "type": "image",
+        "label": "Coffee Machine",
+        "position": {
+          "x": -1,
+          "y": 1.2,
+          "z": -3
+        },
+        "imageUrl": "/assets/scenes/coffee.png",
+        "useRotation": false
+      }
+    ]
+  },
+  {
+    "name": "Fluoride Application Room",
+    "image": "/assets/scenes/scene2.jpg",
+    "description": "This room contains the fluoride varnish application station.",
+    "hotspots": [
+      {
+        "type": "navigation",
+        "label": "Back to Entrance",
+        "position": {
+          "x": -2,
+          "y": 1.5,
+          "z": -3
+        },
+        "targetScene": 0,
+        "useRotation": false
+      },
+      {
+        "type": "text",
+        "label": "Notice Board",
+        "position": {
+          "x": 1.5,
+          "y": 2.85,
+          "z": -3
+        },
+        "description": "Team meeting every Friday at 3 PM.",
+        "useRotation": false
+      },
+      {
+        "type": "navigation",
+        "label": "Go to Break Area",
+        "position": {
+          "x": 2,
+          "y": 1.5,
+          "z": -2.5
+        },
+        "targetScene": 2,
+        "useRotation": false
+      }
+    ]
+  },
+  {
+    "name": "Staff Break Area",
+    "image": "/assets/scenes/scene3.jpg",
+    "description": "This is the staff break area, located near the end of the corridor.",
+    "hotspots": [
+      {
+        "type": "navigation",
+        "label": "Return to Application Room",
+        "position": {
+          "x": 0,
+          "y": 1.5,
+          "z": -2.5
+        },
+        "targetScene": 1,
+        "useRotation": true,
+        "rotation": "30 90 0"
+      },
+      {
+        "type": "image",
+        "label": "Coffee Machine",
+        "position": {
+          "x": -4,
+          "y": 1.2,
+          "z": -3
+        },
+        "imageUrl": "/assets/scenes/coffee.png",
+        "useRotation": true,
+        "rotation": "90 10 5"
+      },
+      {
+        "type": "text",
+        "label": "Notice Board",
+        "position": {
+          "x": 1.5,
+          "y": 1.5,
+          "z": -3
+        },
+        "description": "Team meeting every Friday at 3 PM.",
+        "useRotation": false,
+        "rotation": "0 0 0"
+      },
+      {
+        "type": "image",
+        "label": "Safety Briefing",
+        "position": {
+          "x": 10,
+          "y": 2,
+          "z": -3
+        },
+        "imageUrl": "/assets/scenes/safety.jpg",
+        "useRotation": true,
+        "rotation": "0 90 0"
+      }
+    ]
+  }
+];
+      let currentScene = 0;
+
+      const skyEl = document.getElementById('sky');
+      const textEl = document.getElementById('description');
+      const hotspotContainer = document.getElementById('hotspot-container');
+      const popupEl = document.getElementById('popup');
+      const popupContentEl = document.getElementById('popup-content');
+
+      function updateScene(index) {
+        const scene = scenes[index];
+        currentScene = index;
+
+        // Update sky and description
+        skyEl.setAttribute('src', scene.image);
+        textEl.setAttribute('text', `value: ${scene.name}\n${scene.description};`);
+
+        // Clear existing hotspots
+        while (hotspotContainer.firstChild) {
+          hotspotContainer.removeChild(hotspotContainer.firstChild);
+        }
+
+        // Add new hotspots
+        scene.hotspots?.forEach(hotspot => {
+          const hotspotEl = document.createElement('a-entity');
+          hotspotEl.setAttribute('class', 'hotspot');
+          hotspotEl.setAttribute('position', hotspot.position);
+          hotspotEl.setAttribute('look-at', '[camera]');
+          hotspotEl.setAttribute('cursor-listener', '');
+          hotspotEl.setAttribute('geometry', 'primitive: circle; radius: 0.2');
+
+          const labelEl = document.createElement('a-text');
+
+          if (hotspot.type === 'navigation') {
+            hotspotEl.setAttribute('material', 'color: #FFC107; shader: flat');
+            labelEl.setAttribute('value', hotspot.label);
+            labelEl.setAttribute('align', 'center');
+            labelEl.setAttribute('color', '#000');
+            labelEl.setAttribute('position', '0 -0.4 0');
+            labelEl.setAttribute('scale', '1 1 1');
+            hotspotEl.appendChild(labelEl);
+            hotspotEl.addEventListener('click', () => {
+              if (typeof hotspot.targetScene === 'number') {
+                updateScene(hotspot.targetScene);
+              }
+            });
+          } else if (hotspot.type === 'text') {
+            hotspotEl.setAttribute('material', 'color: #07f1ff; shader: flat');
+            labelEl.setAttribute('value', hotspot.label);
+            labelEl.setAttribute('align', 'center');
+            labelEl.setAttribute('color', '#000');
+            labelEl.setAttribute('position', '0 -0.4 0');
+            labelEl.setAttribute('scale', '1 1 1');
+            hotspotEl.appendChild(labelEl);
+            hotspotEl.addEventListener('click', () => {
+              showPopup(hotspot.description);
+            });
+          } else if (hotspot.type === 'image') {
+            hotspotEl.setAttribute('material', 'color: #0e07ff; shader: flat');
+            labelEl.setAttribute('value', hotspot.label);
+            labelEl.setAttribute('align', 'center');
+            labelEl.setAttribute('color', '#000');
+            labelEl.setAttribute('position', '0 -0.4 0');
+            labelEl.setAttribute('scale', '1 1 1');
+            hotspotEl.appendChild(labelEl);
+            const imageEl = document.createElement('a-image');
+            imageEl.setAttribute('src', hotspot.imageUrl);
+            imageEl.setAttribute('width', '1.5');
+            imageEl.setAttribute('height', '1');
+            imageEl.setAttribute('position', '0 0 0');
+            hotspotEl.appendChild(imageEl);
+            hotspotEl.addEventListener('click', () => {
+              showPopup(`<img src="${hotspot.imageUrl}" alt="${hotspot.label}" />`);
+            });
+          } else if (hotspot.type === 'video') {
+            hotspotEl.setAttribute('material', 'color: #ff07e5; shader: flat');
+            const videoEl = document.createElement('a-video');
+            videoEl.setAttribute('src', hotspot.videoUrl);
+            videoEl.setAttribute('position', '0 0 0');
+            videoEl.setAttribute('scale', '4 2.25 4');
+            hotspotEl.appendChild(videoEl);
+            hotspotEl.addEventListener('click', () => {
+              showPopup(`<video controls src="${hotspot.videoUrl}" width="100%" height="auto"></video>`);
+            });
+          }
+
+          hotspotContainer.appendChild(hotspotEl);
+        });
+      }
+
+      function showPopup(content) {
+        popupContentEl.innerHTML = content;
+        popupEl.style.display = 'block';
+      }
+
+      function closePopup() {
+        popupEl.style.display = 'none';
+        popupContentEl.innerHTML = ''; // Clear the content
+      }
+
+      AFRAME.registerComponent('cursor-listener', {
+        init: function () {
+          this.el.setAttribute('class', 'clickable');
+          this.el.setAttribute('tabindex', '0');
+        }
+      });
+
+
+		
+
+
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+          currentScene = (currentScene + 1) % scenes.length;
+          updateScene(currentScene);
+        } else if (e.key === 'ArrowLeft') {
+          currentScene = (currentScene - 1 + scenes.length) % scenes.length;
+          updateScene(currentScene);
+        }
+      });
+    </script>
+  </body>
+</html>
