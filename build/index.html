@@ -39,7 +39,7 @@
 
 <body>
   <a-scene id="tour" scene-manager="data: data/data.json" cursor="rayOrigin: mouse"
-    raycaster="objects: .hotspot, .clickable">
+    raycaster="objects: .hotspot, .clickable" webxr="optionalFeatures: magic-window; magicWindowTrackingEnabled: false">
     <a-assets>
       <img id="hotspot-image" src="core/hotspot.png">
       <img id="hotspot-completed-image" src="core/completed.png">
