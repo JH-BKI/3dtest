@@ -1,0 +1,687 @@
+{
+  "global": {
+    "id": 0,
+    "unit": "CHCCCS026 Transport individuals",
+    "name": "Transport Individuals 360 Immersive Activity",
+    "banner": "./assets/splash.jpg",
+    "header": "Transport Individuals",
+    "description": "<p>Complete the following activity on procedures for transporting a client.</p><p>This activity utilises 360 media. You can click/drag or touch/swipe to look around and interact with hotspots that reveal extra information, questions or media. Use this activity to explore spaces or processes as if you were there in person.</p><p>For an enhanced immersive experience, open this activity on a VR headset to explore in Virtual Reality.</p>",
+    "footer": "<p>Select 'Begin' to start the experience.</p>",
+    "theme": "#5992ca"
+  },
+  "scenes": [
+    {
+      "id": 0,
+      "name": "Let's meet our client",
+      "image": "./assets/scene-01/scene-01.jpg",
+      "description": "<h4>The Scenario</h4><p>The Support Services Supervisor has advised that our patient needs to be transported to Rehab centre for an appointment with the physio at 10am sharp.</p><p>The physio has requested that the patient be sent in a wheelchair.</p><p>The Health Services Assistant will facilitate the patient transport.</p>",
+      "startingOrientation": "-4.01 -85.49 0.00",
+      "conditions": {
+        "requiredActivation": false,
+        "requiredElements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "4.72 -2.05 0.13",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 1,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerSrc": 4
+          }
+        },
+        {
+          "id": 1,
+          "type": "image",
+          "label": "Client",
+          "position": "5.05 0.02 -2.07",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-01/scene-01-hotspot-01.jpg",
+            "targetDesc": "Haile has a physio appointment on the ground floor at 10am and must be transported there.",
+            "triggerHotspot": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "image",
+          "label": "Heath Services Assistant",
+          "position": "4.92 0.85 -0.25",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-01/scene-01-hotspot-02.jpg",
+            "targetDesc": "Duncan, the Health Services Assistant, will be assisting with transport of the client.",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 3,
+          "type": "image",
+          "label": "Support Services Supervisor",
+          "position": "4.67 0.58 1.99",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-01/scene-01-hotspot-03.jpg",
+            "targetDesc": "Julia, the Support Services Supervisor, has tasked the HSA with assisting the client. The supervisor will brief the HSA on the patient details. ",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 4,
+          "type": "quiz",
+          "label": "Check your knowledge",
+          "position": " 5.00 -0.46 -0.09",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "",
+            "triggerHotspot": true,
+            "triggerSrc": 5,
+            "questionDetails": {
+              "quizTitle": "Your responsibilities during transportation",
+              "quizQuestion": "Are you allowed to perform any duties outside of your job role while transporting patients?",
+              "correctAnswerResponse": "Your answer was correct.",
+              "incorrectAnswerResponse": "Your answer was incorrect.",
+              "generalAnswerFeedback": "When you are transporting clients, you must not perform any duties that are not part of your job role. If a client asks you to do something that is not part of your responsibilities, you must tell the client you will ask the nurse/supervisor to provide the help the client wants.",
+              "quizWeighting": 1,
+              "numberOfAnswers": 1,
+              "answers": [
+                {
+                  "text": "Yes, but use your best judgement.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Yes, but only if asked by your supervisor.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "No, it is not allowed.",
+                  "isCorrect": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": 5,
+          "type": "video",
+          "label": "Watch: Let's meet our client",
+          "position": "5.50 2.00 0.21",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075901994?h=c5ec81365a",
+            "targetDesc": "<h4>Communication with clients and staff</h4><p>When you have to transport a client, you must find out:</p><ul><li>What time to transport</li><li>Who to transport</li><li>Where to transport from and to</li><li>how to transport</li><li>what equipment you need to use.</li></ul><p>Staff caring for the client can confirm this information.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Client Handover",
+      "image": "./assets/scene-02/scene-02.jpg",
+      "description": "<h4>The Scenario</h4><p>To prepare for the safe transportation of a client, you should always:</p><ul><li>Confirm the details of the transportation tasks with staff and patient</li><li>Introduce yourself and explain where you are going and what you will be doing</li><li>Ensure you have consent from patient</li><li>Allow the patient to ask questions</li></ul>",
+      "startingOrientation": "-3.44 -85.71 0.00",
+      "conditions": {
+        "requiredActivation": false,
+        "requiredElements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "4.43 -1.27 4.24",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 2,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerSrc": 2
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Client Handover",
+          "position": "5.05 -0.82 -0.57",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902017?h=7ab2e60adf",
+            "targetDesc": "<p>To prepare for the safe transportation of a client, you should always:</p><ul><li>understand the client's individual needs</li><li>know what transport options are available</li><li>prepare the environment including:<ul><li>check the route you will be taking, noting any potential dangers</li><li>ensure you have access, such as ramps, rails, elevators and emergency exits, etcetera.</li><li>ensure the building has suitable entrance and exit points</li></ul></li></ul>",
+            "triggerHotspot": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "quiz",
+          "label": "Check your knowledge",
+          "position": "3.86 -1.26 -3.22",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "",
+            "triggerHotspot": true,
+            "triggerSrc": 1,
+            "questionDetails": {
+              "quizTitle": "The right to refuse transport",
+              "quizQuestion": "Does the client have a right to refuse to be transported?",
+              "correctAnswerResponse": "Your answer was correct.",
+              "incorrectAnswerResponse": "Your answer was incorrect.",
+              "generalAnswerFeedback": "The client can refuse to be transported. If this occurs, it is up to the care staff to discuss this with the client, identity what the client's concerns are and address the problem.",
+              "quizWeighting": 1,
+              "numberOfAnswers": 1,
+              "answers": [
+                {
+                  "text": "Yes",
+                  "isCorrect": true
+                },
+                {
+                  "text": "No",
+                  "isCorrect": false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Checking your equipment",
+      "image": "./assets/scene-03/scene-03.jpg",
+      "description": "<h4>Transporting equipment</h4><p>To prevent the risk of injury to the client, or you, check that the required equipment is in good working order.<br />The Health Services Assistant locates the wheelchair from the stored location.</p><p>After determining the size is appropriate for the client, they unfold it, test the tyre pressure, unlock brakes and lift the footplates before attempting to move the client.</p>",
+      "startingOrientation": "-20.86 92.13 0.00",
+      "conditions": {
+        "requiredActivation": false,
+        "requiredElements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "-4.42 -0.38 2.63",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 3,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerSrc": 4
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Checking your equipment",
+          "position": "-5.61 0.05 -0.44",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902068?h=91f7a040be",
+            "targetDesc": "When using a wheelchair to transport a client, make sure you have selected is the correct size and the client is within the weight limit for the selected wheelchair.",
+            "triggerHotspot": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "image",
+          "label": "Tyre Check",
+          "position": "-4.56 -3.00 0.49",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-03/scene-03-hotpspot-02.jpg",
+            "targetDesc": "Check the tyres for low pressure or damage.",
+            "triggerHotspot": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 3,
+          "type": "image",
+          "label": "Brakes Check",
+          "position": "-3.50 -3.89 -0.23",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-03/scene-03-hotpspot-04.jpg",
+            "targetDesc": "Brakes must always be applied when wheelchair is stationary and you are not holding the chair.",
+            "triggerHotspot": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 4,
+          "type": "quiz",
+          "label": "Check your knowledge",
+          "position": "-5.22 -0.27 1.18",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "",
+            "triggerHotspot": true,
+            "triggerSrc": 1,
+            "questionDetails": {
+              "quizTitle": "Wheelchair equipment check",
+              "quizQuestion": "When using a wheelchair to transport a client, what is the first safety check you must perform?",
+              "correctAnswerResponse": "Your answer was correct.",
+              "incorrectAnswerResponse": "Your answer was incorrect.",
+              "generalAnswerFeedback": "The first safety check is to determine that the wheelchair you have selected for the client is of the correct size and that the client's weight is within the supported weight limit range for the wheelchair.",
+              "quizWeighting": 1,
+              "numberOfAnswers": 1,
+              "answers": [
+                {
+                  "text": "A pressure and puncture test for the wheels.",
+                  "isCorrect": false
+                },
+                {
+                  "text": "The wheelchair is the appropriate size and can support the client's weight.",
+                  "isCorrect": true
+                },
+                {
+                  "text": "The wheelchair footplates can be lifted and folded.",
+                  "isCorrect": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": 5,
+          "type": "image",
+          "label": "Footplate Check",
+          "position": "-4.30 -3.36 -2.92",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-03/scene-03-hotpspot-03.jpg",
+            "targetDesc": "Check that all parts are secure, and nothing is broken.",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Dignity, privacy and comfort",
+      "image": "./assets/scene-04/scene-04.jpg",
+      "description": "Dignity, privacy and comfortYou should always protect the dignity and privacy of the client. Make sure that the client is comfortable and is fully dressed or covered.Ensure that client is warm enough. If you need to take the client outside, first check the weather. Then, if you need to, bring extra blankets, an umbrella and/or a hat to protect the client.",
+      "startingOrientation": "-12.61 86.63 0.00",
+      "conditions": {
+        "required-activation": false,
+        "required-elements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "-4.54 -2.96 -0.39",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 5,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 1
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Dignity, privacy and comfort",
+          "position": "-4.97 -0.71 -0.91",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902823?h=037623dfa7",
+            "targetDesc": "<p>Always ensure the client is comfortable and is fully dressed or covered.</p><p>When using a wheelchair, dress the client in a gown, and put a small sheet or blanket to cover the client's legs.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "image",
+          "label": "Blanket",
+          "position": "-4.76 -1.42 1.12",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-04/scene-04-hotspot-01.png",
+            "targetDesc": "Have a blanket to cover for comfort and dignity when transporting.",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Before transport",
+      "image": "./assets/scene-06/scene-06.jpg",
+      "description": "<h4>Before transport</h4><p>The HSA (Duncan) wheels the wheelchair over to the patient&rsquo;s bed, talks to the patient and explains he will be assisting with moving her to the rehab/Allied Health section.</p><p>He assists her out of the hospital bed, asks her to move her legs so they reach the floor, guides her to take short steps back towards the wheelchair and helps her move into the seat, while holding her arm.</p>",
+      "startingOrientation": "-13.41 98.55 0.00",
+      "conditions": {
+        "required-activation": false,
+        "required-elements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "-4.66 -1.94 -1.43",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 6,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 4
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Before transport",
+          "position": "-5.91 1.00 1.29",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902847?h=fb638bb614",
+            "targetDesc": "<p>The HSA (Duncan) wheels the wheelchair over to the patient&rsquo;s bed, talks to the patient and explains he will be assisting with moving her to the rehab/Allied Health section.</p><p>He assists her out of the hospital bed, asks her to move her legs so they reach the floor, guides her to take short steps back towards the wheelchair and helps her move into the seat, while holding her arm.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "image",
+          "label": "Client Check In",
+          "position": "-5.49 -1.91 1.77",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-06/scene-06-hotspot-02.jpg",
+            "targetDesc": "<p>Explain to the client what you will be doing.</p><p>Ensure you have consent to begin and allow the client to ask questions.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 3,
+          "type": "image",
+          "label": "Brake Check",
+          "position": "-4.32 -2.91 -0.72",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-06/scene-06-hotspot-01.jpg",
+            "targetDesc": "<p>The brakes must be on when the client is getting on or off the wheelchair.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 4,
+          "type": "quiz",
+          "label": "Check your knowledge",
+          "position": "-5.56 -0.70 0.04",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 1,
+            "questionDetails": {
+              "showQuiz": true,
+              "quizTitle": "(TDB) New Quiz",
+              "quizQuestion": "Question?",
+              "correctAnswerResponse": "Correct!",
+              "incorrectAnswerResponse": "Incorrect.",
+              "generalAnswerFeedback": "This is general question feedback on what is the correct answer and why.",
+              "quizWeighting": 1,
+              "numberOfAnswers": 1,
+              "answers": [
+                {
+                  "text": "Correct",
+                  "isCorrect": true
+                },
+                {
+                  "text": "Incorrect",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Incorrect",
+                  "isCorrect": false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Moving the client",
+      "image": "./assets/scene-07/scene-07.jpg",
+      "description": "<p>Transporting the client should always follow the organisation's policies and procedures.</p><p>Check your organisation's policy about using lap belts, and secure the client with the app belt if it is required.</p><p>Ensure that the footrests are locked in and the client&rsquo;s feet are on the footrests before moving the wheelchair.</p>",
+      "startingOrientation": "-14.67 68.53 0.00",
+      "conditions": {
+        "required-activation": false,
+        "required-elements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "-3.66 -0.80 -4.09",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 8,
+            "targetDesc": "Next",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 3
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Moving the client",
+          "position": "-5.27 -1.17 -0.54",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902887?h=28b00ccf2e",
+            "targetDesc": "<p>Transporting the client should always follow the organisation's policies and procedures.</p><p>Check your organisation's policy about using lap belts, and secure the client with the app belt if it is required.</p><p>Ensure that the footrests are locked in and the client&rsquo;s feet are on the footrests before moving the wheelchair.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "image",
+          "label": "Footrests and footplates",
+          "position": "-4.34 -2.54 1.00",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "./assets/scene-07/scene-07-hotspot-01.jpg",
+            "targetDesc": "<p>When the wheelchair is moving, the footrests must be locked in position, and the client's feet on the footplates.</p>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 3,
+          "type": "quiz",
+          "label": "Check your knowledge",
+          "position": "-5.56 -0.70 0.04",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 1,
+            "questionDetails": {
+              "showQuiz": true,
+              "quizTitle": "(TDB) New Quiz",
+              "quizQuestion": "Question?",
+              "correctAnswerResponse": "Correct!",
+              "incorrectAnswerResponse": "Incorrect.",
+              "generalAnswerFeedback": "This is general question feedback on what is the correct answer and why.",
+              "quizWeighting": 1,
+              "numberOfAnswers": 1,
+              "answers": [
+                {
+                  "text": "Correct",
+                  "isCorrect": true
+                },
+                {
+                  "text": "Incorrect",
+                  "isCorrect": false
+                },
+                {
+                  "text": "Incorrect",
+                  "isCorrect": false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Movement of clients",
+      "image": "./assets/scene-09/scene-09.jpg",
+      "description": "<h4>Movement of clients</h4>\n<p>Moving through a busy hospital or facility requires skill, and care needs to be taken to ensure the safety of the client. The safety of the client is your priority when moving the client from one area to the other.</p>",
+      "startingOrientation": "3.44 -86.17 0.00",
+      "conditions": {
+        "required-activation": false,
+        "required-elements": []
+      },
+      "hotspots": [
+        {
+          "id": 0,
+          "type": "navigation",
+          "label": "Next",
+          "position": "5.19 0.58 0.85",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": 0,
+            "targetDesc": "Hotspot description",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 1,
+          "type": "video",
+          "label": "Watch: Movement of clients",
+          "position": "5.66 0.15 -0.54",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "https://player.vimeo.com/video/1075902923?h=025ce55010",
+            "targetDesc": "<h4>Movement of clients</h4>\n<p>Moving through a busy hospital or facility requires skill, and care needs to be taken to ensure the safety of the client. The safety of the client is your priority when moving the client from one area to the other.</p>",
+            "triggerHotspot": true,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "label": "Environment obstructions",
+          "position": "4.48 -1.05 -2.59",
+          "useRotation": false,
+          "rotation": "0 0 0",
+          "visited": false,
+          "specific": {
+            "targetSrc": "",
+            "targetDesc": "<p>Watch for obstructions when in motion look for:</p>\n<ul>\n<li>protrusions that could injure the client or damage the chair</li>\n<li>obstructions that could tip the chair forwards (holes) or sideways</li>\n<li>watch for swinging doors</li>\n<li>travel at controlled speed, no more than walking pace.</li>\n</ul>",
+            "triggerHotspot": false,
+            "triggerPrePost": false,
+            "triggerSrc": 0
+          }
+        }
+      ]
+    }
+  ]
+}
