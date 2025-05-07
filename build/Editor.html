@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="description" content="Dragging example with constraint">
+	<meta charset="UTF-8" content="width=device-width,initial-scale=1.0">
+	<title>BKI Spacial Studio</title>
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+	<style>
+	 body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f9;padding:20px}
+	 #file-upload{margin-bottom:20px}
+	 .tree-node{padding-left:20px;margin:6px 0}
+   .tree-node strong {display: block;margin: 20px 0;border-bottom: 1px solid;width: 1000px;}
+	 .collapsible{cursor:pointer;padding:5px;background:#e2e2e2;border:none;width:100%;text-align:left}
+	 .collapsible-content{display:none;margin-left:20px;margin-bottom:20px}
+	 .major {background: #818181;color: white;font-size: large;}
+	 input[type=text],input[type=number],textarea{width:100%;max-width:450px;padding:4px;margin-top:4px;min-width: 100px;min-height: 2rem;}
+	 input.editable, textarea.editable{border:2px solid red}
+	 .edit-button{margin-left:8px;background:#007bff;color:#fff;border:none;padding:4px 9px;cursor:pointer;bottom: 7px;position: relative;}
+	 .add-button{margin:10px 0;background:#ff9800;color:#fff;border:none;padding:5px 10px;cursor:pointer}
+	 .save-button{margin-top:20px;background:#28a745;color:#fff;border:none;padding:10px 15px;cursor:pointer}
+	 .dropdown{padding:5px;margin-left:8px}
+	 label{font-weight: 600;  width: 100%;  max-width: 110px;  display: inline-block;  font-size: 0.9rem;  bottom: 0px;  position: relative;  word-break: break-all;  margin-right: 10px;}
+
+   .close-ascene {
+    font-family: sans-serif, monospace;
+    font-size: 13px;
+    width: 100px;
+    font-weight: 200;
+    line-height: 16px;
+    position: absolute;
+    right: 20px;
+    bottom: 100px;
+    z-index: 1;
+    padding:4px 9px;
+  }
+
+	.editorWindow {
+		position: fixed;
+		top: 0%;
+		left: 0;
+		background: white;
+		padding: 20px;
+		width: 100%;
+		height: 100%;
+		display: block;
+		z-index: 9999;
+    overflow-y: scroll;
+    margin-bottom: 100px;
+	}
+	</style>
+    
+  </head>
+  <body>
+    <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+
+      <!-- 360 background -->
+      <a-sky id="skybox" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg" rotation="0 0 0"></a-sky>
+
+      <!-- Camera -->
+      <a-camera id="camera" look-controls position="0 0 0" track-camera="track: false">
+        <!-- Crosshair -->
+        <a-entity id="crosshair" geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015" material="color: white; shader: flat" position="0 0 -1"></a-entity>
+      </a-camera>
+
+      <!-- Draggable Entity -->
+      <a-sphere 
+        id="draggable" 
+        class="clickable" 
+        color="#EF2D5E" 
+        radius="0.1" 
+        position="0 1.6 -2">
+      </a-sphere>
+
+      <div class="close-ascene">
+        <button onclick='showPopup(false,"","","min");'>Min</button>
+        <button onclick='showPopup(false,"","","max");'>Max</button>
+        <button onclick='showPopup(false);'>Close</button>
+        <div style="margin-top:20px;">
+          <label for="orientation-input">Set Camera Orientation (x y z):</label>
+          <input type="text" id="orientation-input" value="0 0 0" style="width:120px;">
+          <button onclick="setCameraOrientation()">Set Orientation</button>
+          <button onclick="resetCameraOrientation()">Reset Orientation</button>
+          <span id="orientation-scene-label" style="margin-left:10px;"></span>
+        </div>
+      </div
+
+      <!-- Floating reset orientation button -->
+      <button id="reset-orientation-btn" style="position: absolute; top: 20px; right: 20px; z-index: 10; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Reset View</button>
+
+    </a-scene>
+	
+	<div class="editorWindow">
+		<h1>BKI Spacial Studio</h1>
+
+		<input type="file" id="file-upload" accept=".json" onchange="loadFile(event)"><br>
+		<div id="json-tree"></div>
+
+		<button class="add-button" onclick="addNewScene()">Add New Scene</button>
+		<br><br>
+		<button class="save-button" onclick="saveJson()">Save JSON (console)</button>
+      <br><br><br><br>
+	</div>
+	
+      <!-- Dragging Script -->
+      <script>
+	  
+	  const skybox = document.getElementById('skybox');
+	  
+	  
+        AFRAME.registerComponent('drag-move', {
+          init: function () {
+            const el = this.el;
+            const camera = document.getElementById('camera');
+            let isDragging = false;
+
+            el.addEventListener('mousedown', function () {
+              isDragging = true;
+            });
+
+            window.addEventListener('mouseup', function () {
+              if (isDragging) {
+                isDragging = false;
+                const pos = el.getAttribute('position');
+                console.log(`Dropped at:\n\n ${pos.x.toFixed(2)} ${pos.y.toFixed(2)} ${pos.z.toFixed(2)}`);
+              }
+            });
+
+            window.addEventListener('mousemove', function (evt) {
+              if (!isDragging) return;
+
+              const scene = document.querySelector('a-scene');
+              const canvas = scene.canvas;
+              const mouse = {
+                x: (evt.clientX / canvas.width) * 2 - 1,
+                y: -(evt.clientY / canvas.height) * 2 + 1
+              };
+
+              const raycaster = new THREE.Raycaster();
+              raycaster.setFromCamera(mouse, camera.getObject3D('camera'));
+
+              // Place on a plane perpendicular to the camera, at a fixed distance
+              const cameraObj = camera.getObject3D('camera');
+              const camPos = new THREE.Vector3();
+              cameraObj.getWorldPosition(camPos);
+              const camDir = new THREE.Vector3();
+              cameraObj.getWorldDirection(camDir);
+
+              // Set the distance from the camera (e.g., 5 units)
+              const distance = 5;
+              const planePoint = camPos.clone().add(camDir.clone().multiplyScalar(distance));
+              const planeNormal = camDir.clone();
+
+              // Ray-plane intersection
+              const ray = raycaster.ray;
+              const denom = planeNormal.dot(ray.direction);
+              if (Math.abs(denom) > 1e-6) {
+                const t = planePoint.clone().sub(ray.origin).dot(planeNormal) / denom;
+                if (t > 0) {
+                  const intersection = ray.origin.clone().add(ray.direction.clone().multiplyScalar(t));
+                  el.setAttribute('position', {
+                    x: intersection.x,
+                    y: intersection.y,
+                    z: intersection.z
+                  });
+                }
+              }
+            });
+          }
+        });
+
+        // Attach the component to the sphere
+        document.getElementById('draggable').setAttribute('drag-move', '');
+      
+	  
+      AFRAME.registerComponent('track-camera', {
+		schema: {track: {type: 'bool', default: false}},
+        tick: function () {
+		
+		if(this.data.track==true){
+          const position = this.el.getAttribute('position');
+          const rotation = this.el.getAttribute('rotation');
+          console.log(`Position: x=${position.x.toFixed(2)}, y=${position.y.toFixed(2)}, z=${position.z.toFixed(2)}`);
+          console.log(`Rotation: x=${rotation.x.toFixed(2)}, y=${rotation.y.toFixed(2)}, z=${rotation.z.toFixed(2)}`);
+		}
+        }
+      });
+	  
+	  
+	  
+	  /* ======================================================================================================== */
+	  
+let jsonData={};
+
+/* ---------- collapsible helper ---------- */
+function makeCollapser(text,key,special=''){
+  const b=document.createElement('button');
+  b.className='collapsible '+special;b.textContent=text;b.dataset.key=key;
+  b.onclick=()=>{const n=b.nextElementSibling;n.style.display=n.style.display==='block'?'none':'block';};
+  return b;
+}
+
+/* ---------- file load ---------- */
+function loadFile(e){
+  const f=e.target.files[0];
+  if(!f||f.type!=="application/json"){alert("Upload a .json file");return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{jsonData=JSON.parse(ev.target.result);renderJsonTree();}
+    catch(err){alert("Invalid JSON");console.error(err);}
+  };
+  r.readAsText(f);
+}
+
+/* ---------- render tree + keep open state ---------- */
+function renderJsonTree(){
+  const openKeys=new Set([...document.querySelectorAll('.collapsible')]
+                          .filter(b=>b.nextElementSibling?.style.display==='block')
+                          .map(b=>b.dataset.key));
+
+  const cont=document.getElementById('json-tree');
+  cont.innerHTML='';
+
+  /* ---------- global ---------- */
+  if(jsonData.global){
+    const gDiv=nodeWrapper();
+    gDiv.appendChild(makeCollapser('0. Global Info','global','major'));
+    const gC=content();
+    const g=jsonData.global;
+    gC.appendChild(editField('ID',g.id,'global.id','number'));
+    gC.appendChild(editField('Name',g.name,'global.name'));
+    gC.appendChild(editField('Banner',g.banner,'global.banner','text',PreviewCode('img',g.banner)));
+    gC.appendChild(editField('Header',g.header,'global.header'));
+    gC.appendChild(editField('Description',g.description,'global.description'));
+    gC.appendChild(editField('Footer',g.footer,'global.footer'));
+    gDiv.appendChild(gC);cont.appendChild(gDiv);
+  }
+  
+  let order = 1;
+  /* ---------- scenes ---------- */
+  jsonData.scenes?.forEach((s,i)=>{
+    cont.appendChild(createSceneNode(s,i,order))
+    order++;
+  });
+
+  /* reopen prior sections */
+  document.querySelectorAll('.collapsible').forEach(b=>{
+    if(openKeys.has(b.dataset.key)) b.nextElementSibling.style.display='block';
+  });
+}
+
+/* ---------- helper builders ---------- */
+const nodeWrapper=()=>Object.assign(document.createElement('div'),{className:'tree-node'});
+const content=()=>Object.assign(document.createElement('div'),{className:'collapsible-content'});
+
+function setDeep(obj,path,val){
+  const parts=path.replace(/\]/g,'').split(/\.|\[/);
+  let o=obj;parts.slice(0,-1).forEach(p=>o=o[p]);
+  o[parts.at(-1)]=val;
+}
+
+
+
+/* editable input line */
+function editField(label,val,path,type='text',previewCode=''){
+  const wrap=nodeWrapper();
+  wrap.innerHTML=`<label>${label}: </label>`;
+  let inp;
+  if(type==='checkbox'){
+    inp=document.createElement('input');
+    inp.type='checkbox';inp.checked=val;
+  }
+  else if(type==='number'){
+    inp=document.createElement('input');
+    inp.type='number';inp.value=val;
+  }else {
+    inp=document.createElement('textarea');    
+    inp.type=type;inp.value=val;
+  }
+  inp.disabled=true;
+  
+  wrap.appendChild(inp);
+  const btn=document.createElement('button');
+  btn.className='edit-button';btn.textContent='Edit';
+  btn.onclick=()=>{
+    if(inp.disabled){
+      inp.disabled=false;inp.classList.add('editable');btn.textContent='Save';
+    }else{
+      inp.disabled=true;inp.classList.remove('editable');btn.textContent='Edit';
+      const v=(type==='checkbox')?inp.checked:(type==='number'?Number(inp.value):inp.value);
+      setDeep(jsonData,path,v);
+	  renderJsonTree();
+    }
+  };
+  
+  wrap.appendChild(btn);
+
+  if(previewCode!=""){
+	wrap.insertAdjacentHTML( 'beforeend', previewCode);	
+  }
+  
+  
+
+  
+  return wrap;
+}
+
+
+    function showPopup(show,skyboxPath="",rotValue="",minmax="") {
+      
+      if(skyboxPath!=""){
+        skybox.setAttribute("src",skyboxPath);
+
+      }
+
+      if(rotValue!=""){
+        document.getElementById('orientation-input').value = rotValue;
+        setCameraOrientation();
+      }
+
+	    if (show) {document.querySelector('.editorWindow').style.width = '41%';}
+      else {document.querySelector('.editorWindow').style.width = '100%';}
+	  
+	    if (minmax=="min") {document.querySelector('.editorWindow').style.width = '1%';}
+      else if (minmax=="max"){document.querySelector('.editorWindow').style.width = '41%';}
+	  
+    }
+
+
+/* hotspot type dropdown */
+const hotspotTypes=['navigation','text','image','video','quiz'];
+function typeDropdown(){const dd=document.createElement('select');dd.className='dropdown';
+  hotspotTypes.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;dd.appendChild(o);});
+  return dd;
+}
+
+function PreviewCode(type,src){
+  var prevType = type==='video'?'iframe':'img';
+  var prevCode = `<div style="position: relative; padding: 330px 0 0 0; display: block; left: 110px;"><${prevType} style="display: block;position:absolute;top:0;left:0;width:560px;height:315px;" src="${src}" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></${prevType}></div>`;
+  
+  return prevCode;
+}
+
+function SetRotationPopupCode(rotValue,skyboxPath){
+  //set camera to be rotValue
+
+  var buttonCode = `<button class="edit-button" onclick='showPopup(true,"${skyboxPath}","${rotValue}");'>[+]</button>`;
+  
+  console.log("rotValue>>\n:"+rotValue);
+
+  return buttonCode;
+}
+
+
+
+
+/* ---------- scene node ---------- */
+function createSceneNode(scene,idx,order){
+  const div=nodeWrapper();
+  div.appendChild(makeCollapser(order+`. Scene: ${scene.name} [${scene.id}] `,`scene-${idx}`,'major'));
+  const c=content();
+
+  c.appendChild(editField('ID',scene.id,`scenes[${idx}].id`,'number'));
+  c.appendChild(editField('Name',scene.name,`scenes[${idx}].name`));
+
+  c.appendChild(editField('Image',scene.image,`scenes[${idx}].image`,'text', PreviewCode('img',scene.image)));
+  c.appendChild(editField('Description',scene.description,`scenes[${idx}].description`));
+  c.appendChild(editField('Starting Orientation',scene.startingOrientation,`scenes[${idx}].startingOrientation`,'text', SetRotationPopupCode(scene.startingOrientation,scene.image)));
+
+  /* conditions */
+  const cond=nodeWrapper();cond.innerHTML='<strong>Conditions</strong>';
+  cond.appendChild(editField('Required Activation',scene.conditions["requiredActivation"],
+                             `scenes[${idx}].conditions["requiredActivation"]`,'checkbox'));
+  cond.appendChild(editField('Required Elements',scene.conditions["requiredElements"],
+                             `scenes[${idx}].conditions["requiredElements"]`));
+  c.appendChild(cond);
+
+  /* hotspots */
+  const hsWrap=nodeWrapper();hsWrap.innerHTML='<strong>Hotspots</strong>';
+  scene.hotspots.forEach((hs,i)=>hsWrap.appendChild(createHotspotNode(hs,idx,i)));
+
+  /* add hotspot line */
+  const addLine=nodeWrapper();
+  const dd=typeDropdown();
+  const btn=document.createElement('button');
+  btn.className='add-button';btn.textContent='Add Hotspot';
+  btn.onclick=()=>addHotspot(idx,dd.value);
+  addLine.appendChild(dd);addLine.appendChild(btn);
+  hsWrap.appendChild(addLine);
+
+  c.appendChild(hsWrap);div.appendChild(c);return div;
+}
+
+
+
+
+/* ---------- hotspot node ---------- */
+function createHotspotNode(hs,sIdx,hIdx){
+  const div=nodeWrapper();
+  div.appendChild(makeCollapser(`${hs.type} hotspot: ${hs.label}`,`scene-${sIdx}-hs-${hIdx}`));
+  const c=content();
+  const base=`scenes[${sIdx}].hotspots[${hIdx}]`;
+
+  c.appendChild(editField('ID',hs.id,`${base}.id`,'number'));
+  c.appendChild(editField('Label',hs.label,`${base}.label`));
+  c.appendChild(editField('Type',hs.type,`${base}.type`));
+  c.appendChild(editField('Position',hs.position,`${base}.position`));
+  c.appendChild(editField('Rotation',hs.rotation,`${base}.rotation`));
+  c.appendChild(editField('Visited',hs.visited,`${base}.visited`,'checkbox'));
+
+  /* specific */
+  const spec=nodeWrapper();spec.appendChild(makeCollapser('specific',`scene-${sIdx}-hs-${hIdx}-spec`));
+  const sc=content();
+  const p=`${base}.specific`;
+  if(hs.type==='video' || hs.type==='image' || hs.type==='quiz'){
+    sc.appendChild(editField('targetSrc',hs.specific.targetSrc,`${p}.targetSrc`,'text',PreviewCode(hs.type,`${hs.specific.targetSrc}`)));
+  }else if(hs.type==='navigation'){
+    sc.appendChild(editField('targetSrc',hs.specific.targetSrc,`${p}.targetSrc`,'number'));
+  }else{
+    sc.appendChild(editField('targetSrc',hs.specific.targetSrc,`${p}.targetSrc`));
+  }
+  sc.appendChild(editField('targetDesc',hs.specific.targetDesc,`${p}.targetDesc`));
+  sc.appendChild(editField('triggerHotspot',hs.specific.triggerHotspot,`${p}.triggerHotspot`,'checkbox'));
+  sc.appendChild(editField('triggerPrePost',hs.specific.triggerPrePost,`${p}.triggerPrePost`,'checkbox'));
+  sc.appendChild(editField('triggerSrc',hs.specific.triggerSrc,`${p}.triggerSrc`,'number'));
+
+  /* quiz sub‑block */
+  if(hs.type==='quiz'&&hs.specific.questionDetails){
+    const qWrap=nodeWrapper();qWrap.appendChild(makeCollapser('questionDetails',`scene-${sIdx}-hs-${hIdx}-qd`));
+    const qc=content();
+    const qp=`${p}.questionDetails`;
+    const qd=hs.specific.questionDetails;
+    qc.appendChild(editField('showQuiz',qd.showQuiz,`${qp}.showQuiz`,'checkbox'));
+    qc.appendChild(editField('quizTitle',qd.quizTitle,`${qp}.quizTitle`));
+    qc.appendChild(editField('quizQuestion',qd.quizQuestion,`${qp}.quizQuestion`));
+    qc.appendChild(editField('correctAnswerResponse',qd.correctAnswerResponse,`${qp}.correctAnswerResponse`));
+    qc.appendChild(editField('incorrectAnswerResponse',qd.incorrectAnswerResponse,`${qp}.incorrectAnswerResponse`));
+    qc.appendChild(editField('generalAnswerFeedback',qd.generalAnswerFeedback,`${qp}.generalAnswerFeedback`));
+    qc.appendChild(editField('quizWeighting',qd.quizWeighting,`${qp}.quizWeighting`,'number'));
+    qc.appendChild(editField('numberOfAnswers',qd.numberOfAnswers,`${qp}.numberOfAnswers`,'number'));
+    const ans=nodeWrapper();ans.innerHTML='<em>Answers:</em>';
+    qd.answers.forEach((a,i)=>{
+      ans.appendChild(editField(`Ans ${i+1} text`,a.text,`${qp}.answers[${i}].text`));
+      ans.appendChild(editField(`Ans ${i+1} correct`,a.isCorrect,`${qp}.answers[${i}].isCorrect`,'checkbox'));
+    });
+    qc.appendChild(ans);qWrap.appendChild(qc);sc.appendChild(qWrap);
+  }
+
+  spec.appendChild(sc);c.appendChild(spec);
+  div.appendChild(c);return div;
+}
+
+/* ---------- adders ---------- */
+function addNewScene(){
+  jsonData.scenes=jsonData.scenes||[];
+  jsonData.scenes.push({
+    id:jsonData.scenes.length,
+    name:'New Scene',
+    image:'/assets/scenes-00/scene-00.jpg',
+    description:'(edit)',
+	startingOrientation:'0 0 0',
+    conditions:{"required-activation":false,"required-elements":[]},
+    hotspots:[]
+  });
+  renderJsonTree();
+}
+function addHotspot(sIdx,type){
+  const h=jsonData.scenes[sIdx].hotspots;
+  h.push({
+    id:h.length,type,label:`New ${type}`,position:"0 0 0",
+    useRotation:false,rotation:"0 0 0",visited:false,
+    specific:{
+      targetSrc:type==='navigation'?0:type==='video'||type==='image'||type==='quiz'?'Hotspot src':0,
+      targetDesc:'Hotspot description',triggerHotspot:false,triggerPrePost:false,triggerSrc:0,
+      ...(type==='quiz'?{
+        questionDetails:{
+          showQuiz:true,quizTitle:'New Quiz',quizQuestion:'Question?',
+          correctAnswerResponse:'Correct!',incorrectAnswerResponse:'Incorrect.',generalAnswerFeedback:'Answer feedback',
+          quizWeighting:1,numberOfAnswers:1,
+          answers:[{text:'A',isCorrect:true},{text:'B',isCorrect:false},{text:'C',isCorrect:false}]
+        }}:{})
+    }
+  });
+  renderJsonTree();
+}
+
+/* ---------- save ---------- */
+function saveJson(){
+  console.log('Updated JSON:\n=====\n\n',JSON.stringify(jsonData,null,2));
+}
+
+function setCameraOrientation() {
+  const input = document.getElementById('orientation-input').value.trim();
+  const parts = input.split(/\s+/).map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) {
+    alert('Please enter three numbers separated by spaces (e.g., 0 90 0)');
+    return;
+  }
+  const camera = document.getElementById('camera');
+  camera.setAttribute('rotation', `${parts[0]} ${parts[1]} ${parts[2]}`);
+  // Set look-controls internal rotation
+  if (camera.components['look-controls']) {
+    const [x, y, z] = parts.map(val => THREE.MathUtils.degToRad(val));
+    camera.components['look-controls'].pitchObject.rotation.x = x;
+    camera.components['look-controls'].yawObject.rotation.y = y;
+  }
+  // Update the current scene's startingOrientation in jsonData
+  const sceneIdx = getCurrentSceneIdx();
+  if (sceneIdx !== null) {
+    jsonData.scenes[sceneIdx].startingOrientation = `${parts[0]} ${parts[1]} ${parts[2]}`;
+    document.getElementById('orientation-scene-label').textContent = `Saved to scene ${sceneIdx}`;
+  }
+}
+
+function resetCameraOrientation() {
+  document.getElementById('orientation-input').value = '0 0 0';
+  setCameraOrientation();
+}
+
+function getCurrentSceneIdx() {
+  // Try to infer the current scene index from the UI (e.g., first expanded scene)
+  const open = document.querySelector('.collapsible.major[aria-expanded="true"]') || document.querySelector('.collapsible.major');
+  if (open) {
+    const match = open.dataset.key && open.dataset.key.match(/scene-(\d+)/);
+    if (match) return parseInt(match[1], 10);
+  }
+  // Fallback: use first scene
+  if (jsonData.scenes && jsonData.scenes.length > 0) return 0;
+  return null;
+}
+
+// Update #orientation-input with camera rotation every second
+setInterval(() => {
+  const camera = document.getElementById('camera');
+  if (!camera) return;
+  const rot = camera.getAttribute('rotation');
+  if (!rot) return;
+  const rotStr = `${rot.x.toFixed(2)} ${rot.y.toFixed(2)} ${rot.z.toFixed(2)}`;
+  const input = document.getElementById('orientation-input');
+  if (input && input !== document.activeElement) {
+    input.value = rotStr;
+  }
+}, 1000);
+
+// Floating button logic
+setTimeout(() => {
+  const btn = document.getElementById('reset-orientation-btn');
+  if (btn) {
+    btn.onclick = resetCameraToStartingOrientation;
+  }
+}, 1000);
+
+function resetCameraToStartingOrientation() {
+  const sceneIdx = getCurrentSceneIdx();
+  if (sceneIdx === null) return;
+  const orientationStr = jsonData.scenes[sceneIdx]?.startingOrientation || '0 0 0';
+  document.getElementById('orientation-input').value = orientationStr;
+  setCameraOrientation();
+}
+	  
+	  
+	  
+	  </script>
+
+
+  </body>
+</html>
