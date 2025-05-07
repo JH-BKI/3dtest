@@ -63,7 +63,7 @@ AFRAME.registerComponent('hotspot', {
     this.el.appendChild(this.labelEl);
 
     // Set up circle geometry and hotspot texture
-    let iconSrc = '../core/hotspot.png';
+    let iconSrc = './core/hotspot.png';
     if (this.data.type === 'navigation') {
       iconSrc = './core/navigation.png';
     } else if (this.data.type === 'quiz') {
